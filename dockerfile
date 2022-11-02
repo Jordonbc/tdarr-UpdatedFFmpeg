@@ -85,7 +85,7 @@ RUN apt update && apt -y install \
 
   RUN cp --remove-destination $HOME/bin/ffmpeg /usr/local/bin/ffmpeg && \
   mkdir /usr/lib/jellyfin-ffmpeg && \
-  ln /usr/bin/ffmpeg /usr/lib/jellyfin-ffmpeg/ffmpeg && \
+  ln /usr/local/bin/ffmpeg /usr/lib/jellyfin-ffmpeg/ffmpeg && \
   rm /usr/local/bin/tdarr-ffmpeg && \
   ln /usr/local/bin/ffmpeg /usr/local/bin/tdarr-ffmpeg
 
