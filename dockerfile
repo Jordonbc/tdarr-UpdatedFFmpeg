@@ -37,23 +37,26 @@ RUN apt update && apt -y install \
   libx265-dev \
   libnuma-dev \
   libx264-dev \
-  nasm && \
-  mkdir /ffmpeg_sources && export MAKEFLAGS="-j$(expr $(nproc) \+ 1)" && \
+  nasm
+
+  RUN mkdir /ffmpeg_sources && export MAKEFLAGS="-j$(expr $(nproc) \+ 1)" && \
   cd /ffmpeg_sources && \
   git -C dav1d pull 2> /dev/null || git clone --depth 1 https://code.videolan.org/videolan/dav1d.git && \
   mkdir -p dav1d/build && \
   cd dav1d/build && \
   meson setup -Denable_tools=false -Denable_tests=false --default-library=static .. --prefix "$HOME/ffmpeg_build" --libdir="$HOME/ffmpeg_build/lib" && \
   ninja && \
-  ninja install && \
-  cd /ffmpeg_sources && \
+  ninja install
+
+ RUN cd /ffmpeg_sources && \
   git -C SVT-AV1 pull 2> /dev/null || git clone https://gitlab.com/AOMediaCodec/SVT-AV1.git && \
   mkdir -p SVT-AV1/build && \
   cd SVT-AV1/build && \
   PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DCMAKE_BUILD_TYPE=Release -DBUILD_DEC=OFF -DBUILD_SHARED_LIBS=OFF .. && \
   PATH="$HOME/bin:$PATH" make -j16 && \
-  make install && \
-  wget -O ffmpeg-snapshot.tar.bz2 https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2 && \
+  make install
+
+  RUN wget -O ffmpeg-snapshot.tar.bz2 https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2 && \
   tar xjvf ffmpeg-snapshot.tar.bz2 && \
   cd ffmpeg && \
   PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
@@ -78,8 +81,9 @@ RUN apt update && apt -y install \
     --enable-libx264 \
     --enable-libx265 && \
   PATH="$HOME/bin:$PATH" make -j16 && \
-  make install && \
-  cp --remove-destination ~/bin/ffmpeg /usr/local/bin/ffmpeg && \
+  make install
+
+  RUN cp --remove-destination ~/bin/ffmpeg /usr/local/bin/ffmpeg && \
   mkdir /usr/lib/jellyfin-ffmpeg && \
   ln -s /usr/bin/ffmpeg /usr/lib/jellyfin-ffmpeg/ffmpeg && \
   rm /usr/local/bin/tdarr-ffmpeg && \
