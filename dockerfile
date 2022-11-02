@@ -53,7 +53,7 @@ RUN apt update && apt -y install \
   mkdir -p SVT-AV1/build && \
   cd SVT-AV1/build && \
   PATH="$HOME/bin:$PATH" cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DCMAKE_BUILD_TYPE=Release -DBUILD_DEC=OFF -DBUILD_SHARED_LIBS=OFF .. && \
-  PATH="$HOME/bin:$PATH" make -j16 && \
+  PATH="$HOME/bin:$PATH" make -j2 && \
   make install
 
   RUN wget -O ffmpeg-snapshot.tar.bz2 https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2 && \
@@ -80,10 +80,10 @@ RUN apt update && apt -y install \
     --enable-libvpx \
     --enable-libx264 \
     --enable-libx265 && \
-  PATH="$HOME/bin:$PATH" make -j16 && \
+  PATH="$HOME/bin:$PATH" make -j2 && \
   make install
 
-  RUN cp --remove-destination ~/bin/ffmpeg /usr/local/bin/ffmpeg && \
+  RUN cp --remove-destination $HOME/bin/ffmpeg /usr/local/bin/ffmpeg && \
   mkdir /usr/lib/jellyfin-ffmpeg && \
   ln /usr/bin/ffmpeg /usr/lib/jellyfin-ffmpeg/ffmpeg && \
   rm /usr/local/bin/tdarr-ffmpeg && \
